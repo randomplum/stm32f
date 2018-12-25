@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/Drivers/CMSIS/Include",
+                "${workspaceFolder}/Drivers/ssd1306/inc",
+                "${workspaceFolder}/Drivers/soft_i2c/inc",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
+                "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Inc",
+                "${workspaceFolder}/app/inc",
+                "${workspaceFolder}/board/inc",
+                "${workspaceFolder}/common/inc"
+            ],
+            "defines": [
+                "NDEBUG",
+                "__GNUC__"
+            ],
+            "forcedInclude": [ "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h"],
+            "compilerPath": "/home/dsliwa/gcc-arm-none-eabi-7-2018-q2-update/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "vector-of-bool.cmake-tools"
+        }
+    ],
+    "version": 4
+}

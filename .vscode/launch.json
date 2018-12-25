@@ -1,0 +1,45 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+
+		{
+			"cwd": "${workspaceRoot}",
+			"executable": "./build/stm32f030",
+			"name": "Debug OpenOCD",
+			"request": "launch",
+			"type": "cortex-debug",
+			"servertype": "openocd",
+			"device": "STM32F030",
+			"configFiles": [
+				"./board/openocd.cfg"
+			]
+		},
+		{
+			"name": "Debug JLink",
+			"cwd": "${workspaceRoot}",
+			"executable": "./build/stm32f030",
+			"request": "launch",
+			"type": "cortex-debug",
+			"device": "STM32F030",
+			"servertype": "jlink",
+			"interface": "swd",
+			//"ipAddress": null,
+			//"serialNumber": null
+		},
+		{
+			"name": "Debug BMP",
+			"cwd": "${workspaceRoot}",
+			"executable": "./build/stm32f030",
+			"request": "launch",
+			"type": "cortex-debug",
+			"device": "STM32F030",
+			"svdFile": "./board/STM32F030.svd",
+			"servertype": "bmp",
+			"BMPGDBSerialPort": "/dev/ttyACM0",
+			"targetId": 1
+		}
+	]
+}
