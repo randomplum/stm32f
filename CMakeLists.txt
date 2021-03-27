@@ -17,28 +17,23 @@ string(TOLOWER ${MCU_NAME} MCU_NAME_LC)
 set(CMAKE_SYSTEM_NAME               Generic)
 set(CMAKE_SYSTEM_PROCESSOR          arm)
 
-IF(NOT CROSS_COMPILE_PREFIX)
-    SET(CROSS_COMPILE_PREFIX "arm-none-eabi-")
-    MESSAGE(WARNING "No CROSS_COMPILE_PREFIX specified, using default: " ${CROSS_COMPILE_PREFIX})
-ENDIF()
+#IF(NOT CROSS_COMPILE_PREFIX)
+#    SET(CROSS_COMPILE_PREFIX "arm-none-eabi-")
+#    MESSAGE(WARNING "No CROSS_COMPILE_PREFIX specified, using default: " ${CROSS_COMPILE_PREFIX})
+#ENDIF()
 
-SET(CMAKE_C_COMPILER "${CROSS_COMPILE_PREFIX}gcc")
-set(CMAKE_ASM_COMPILER "${CROSS_COMPILE_PREFIX}gcc")
-SET(CMAKE_OBJCOPY "${CROSS_COMPILE_PREFIX}objcopy" CACHE INTERNAL "objcopy tool")
-SET(CMAKE_OBJDUMP "${CROSS_COMPILE_PREFIX}objdump" CACHE INTERNAL "objdump tool")
-SET(CMAKE_SIZE "${CROSS_COMPILE_PREFIX}size" CACHE INTERNAL "size tool")
+#SET(CMAKE_C_COMPILER "${CROSS_COMPILE_PREFIX}gcc")
+#set(CMAKE_ASM_COMPILER "${CROSS_COMPILE_PREFIX}gcc")
+#SET(CMAKE_OBJCOPY "${CROSS_COMPILE_PREFIX}objcopy" CACHE INTERNAL "objcopy tool")
+#SET(CMAKE_OBJDUMP "${CROSS_COMPILE_PREFIX}objdump" CACHE INTERNAL "objdump tool")
+#SET(CMAKE_SIZE "${CROSS_COMPILE_PREFIX}size" CACHE INTERNAL "size tool")
 
 # Set a default build type if none was specified
-set(default_build_type "Release")
-
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(WARNING "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-      STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release")
-endif()
+IF( NOT CMAKE_BUILD_TYPE )
+  SET(default_build_type "Release")
+  MESSAGE(WARNING "Setting build type to '${default_build_type}' as none was specified.")
+  SET(CMAKE_BUILD_TYPE "${default_build_type}" CACHE STRING "Choose the type of build." FORCE)
+ENDIF()
 
 SET(CMAKE_C_FLAGS " -march=armv6-m -mthumb -fno-builtin -mcpu=cortex-m0 -mfloat-abi=soft -Wall -DNDEBUG -D${MCU_NAME} -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -ffast-math -ftree-vectorize" CACHE INTERNAL "c compiler flags")
 SET(CMAKE_ASM_FLAGS " -march=armv6-m -mthumb -mcpu=cortex-m0 -mfloat-abi=soft -Wa,--no-warn -Wall -DNDEBUG -D${MCU_NAME} -x assembler-with-cpp" CACHE INTERNAL "asm compiler flags")
