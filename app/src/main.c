@@ -64,6 +64,7 @@ void Pinmux_Config(void)
 	GPIO_InitTypeDef gpio_config;
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	USARTx_RX_GPIO_CLK_ENABLE();
 	USARTx_TX_GPIO_CLK_ENABLE();
 
@@ -75,11 +76,33 @@ void Pinmux_Config(void)
 	gpio_config.Pin = USARTx_TX_PIN;
 	gpio_config.Alternate = GPIO_AF1_USART2;
 	HAL_GPIO_Init(USARTx_TX_GPIO_PORT, &gpio_config);
-	gpio_config.Mode = GPIO_MODE_INPUT;
+	gpio_config.Mode = GPIO_MODE_AF_PP;
 	gpio_config.Pin = USARTx_RX_PIN;
 	gpio_config.Alternate = GPIO_AF1_USART2;
 	HAL_GPIO_Init(USARTx_RX_GPIO_PORT, &gpio_config);
 	/* UART End */
+
+	gpio_config.Mode = GPIO_MODE_OUTPUT_PP;
+	/* Motor 1 */
+#define MOTOR2_PWM GPIO_PIN_4
+#define MOTOR2_IN1 GPIO_PIN_15
+#define MOTOR2_IN2 GPIO_PIN_14
+#define MOTOR2_GPIO_PORT GPIOB
+	gpio_config.Pin = MOTOR2_PWM;
+	HAL_GPIO_Init(MOTOR2_GPIO_PORT, &gpio_config);
+	HAL_GPIO_WritePin(MOTOR2_GPIO_PORT, MOTOR2_PWM, GPIO_PIN_SET);
+	gpio_config.Pin = MOTOR2_IN1;
+	HAL_GPIO_Init(MOTOR2_GPIO_PORT, &gpio_config);
+	HAL_GPIO_WritePin(MOTOR2_GPIO_PORT, MOTOR2_IN1, GPIO_PIN_RESET);
+	gpio_config.Pin = MOTOR2_IN2;
+	HAL_GPIO_Init(MOTOR2_GPIO_PORT, &gpio_config);
+	HAL_GPIO_WritePin(MOTOR2_GPIO_PORT, MOTOR2_IN2, GPIO_PIN_SET);
+
+#define ENCODER1_PIN GPIO_PIN_5
+#define ENCODER1_PORT GPIOA
+	gpio_config.Mode = GPIO_MODE_INPUT;
+	gpio_config.Pin = ENCODER1_PIN;
+	HAL_GPIO_Init(ENCODER1_PORT, &gpio_config);
 }
 
 /**
@@ -89,7 +112,6 @@ void Pinmux_Config(void)
  */
 int main(void)
 {
-
 	HAL_Init();
 
 	/* Configure the system clock to 72 MHz */
@@ -117,8 +139,8 @@ int main(void)
 	/* Infinite loop */
 	while (1)
 	{
-		printf("Hi!\r\n");
-		HAL_Delay(1024);
+		printf("Encoder 1 state %s\r", HAL_GPIO_ReadPin(ENCODER1_PORT, ENCODER1_PIN) ? "on ":"off");
+		/* HAL_Delay(1024); */
 	}
 }
 
@@ -130,11 +152,27 @@ int main(void)
 PUTCHAR_PROTOTYPE
 {
 	/* Place your implementation of fputc here */
-	/* e.g. write a character to the USART1 and Loop until the end of
+	/* e.g. write a character to the USARTx and Loop until the end of
 	 * transmission */
 	HAL_UART_Transmit(&UartHandle, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 
 	return ch;
+}
+
+/**
+ * @brief  Retargets the C library scanf function to the USART.
+ * @param  None
+ * @retval None
+ */
+int __io_getchar(void)
+{
+	uint8_t ch;
+	HAL_UART_Receive(&UartHandle, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+#ifdef UART_ENABLE_ECHO
+	HAL_UART_Transmit(&UartHandle, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+#endif
+
+	return (char)ch;
 }
 
 void SystemClock_Config(void)
@@ -225,6 +263,8 @@ void assert_failed(uint8_t *file, uint32_t line)
 	   number,
 	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file,
 	   line) */
+
+	   printf("ASSERT @ %s:%d\r\n", file, line);
 
 	/* Infinite loop */
 	while (1)

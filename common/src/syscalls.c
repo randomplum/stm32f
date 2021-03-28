@@ -42,7 +42,7 @@ extern int errno;
 #define MAX_STACK_SIZE 0x2000
 
 extern int __io_putchar(int ch) __attribute__((weak));
-extern int __io_getchar(void) __attribute__((weak));
+extern char __io_getchar(void) __attribute__((weak));
 
 register char * stack_ptr asm("sp");
 
@@ -78,10 +78,15 @@ int _read (int file, char *ptr, int len)
 
 	for (DataIdx = 0; DataIdx < len; DataIdx++)
 	{
-		*ptr++ = __io_getchar();
+		*ptr = __io_getchar();
+		if (*(char*)ptr == 0x0DU) {
+			*(char*)ptr = '\n';
+			break;
+		}
+		ptr++;
 	}
 
-return len;
+	return (DataIdx + 1);
 }
 
 int _write(int file, char *ptr, int len)

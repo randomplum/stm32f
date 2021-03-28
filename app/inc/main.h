@@ -56,6 +56,7 @@
 
 #define USARTx_FORCE_RESET()             __HAL_RCC_USART2_FORCE_RESET()
 #define USARTx_RELEASE_RESET()           __HAL_RCC_USART2_RELEASE_RESET()
+#define UART_ENABLE_ECHO
 
 /* Definition for USARTx Pins */
 #define USARTx_TX_PIN                    GPIO_PIN_2
